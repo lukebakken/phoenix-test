@@ -27,18 +27,20 @@ fi
 export POSTGRES_DB="$DB_NAME" POSTGRES_USER="$DB_USERNAME" POSTGRES_PASSWORD="$DB_PASSWORD"
 set | grep -F 'POSTGRES'
 
-rm -rf "$DB_DIR"/* "$DB_DIR"/.??*
-
-"$POSTGRES_BIN/initdb" --username="$DB_USERNAME" --pwfile=<(echo "$POSTGRES_PASSWORD") -D"$DB_DIR"
-
-touch "$DB_DIR/.gitkeep"
-
-sleep 2
+# rm -rf "$DB_DIR"/* "$DB_DIR"/.??*
+# 
+# "$POSTGRES_BIN/initdb" --username="$DB_USERNAME" --pwfile=<(echo "$POSTGRES_PASSWORD") -D"$DB_DIR"
+# 
+# touch "$DB_DIR/.gitkeep"
+# 
+# sleep 2
 
 "$POSTGRES_BIN/pg_ctl" -D "$DB_DIR" -l "$script_dir/log/pg_logfile" start
 
 sleep 2
 
+set +o errexit
 "$POSTGRES_BIN/psql" -U "$DB_USERNAME" -c "create database $DB_NAME" postgres
+set -o errexit
 
 tail -f "$script_dir/log/pg_logfile"

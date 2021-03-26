@@ -36,7 +36,7 @@ defmodule HelloWeb.Router do
 
     scope "/" do
       pipe_through :browser
-      live_dashboard "/dashboard", metrics: HelloWeb.Telemetry
+      live_dashboard "/dashboard", metrics: HelloWeb.Telemetry, ecto_repos: Hello.Repo
     end
   end
 end
